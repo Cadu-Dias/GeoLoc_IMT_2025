@@ -1,0 +1,31 @@
+services:
+  jupyter:
+    image: 't1-cic901'
+    ports:
+      - 8888:8888
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./datasets:/home/jovyan/work/datasets
+
+  db:
+    image: postgis/postgis:17-3.5
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: passwd
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+
+  admin:
+    image: dpage/pgadmin4
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      PGADMIN_DEFAULT_EMAIL: cic901@imt.br
+      PGADMIN_DEFAULT_PASSWORD: cic901
+    volumes:
+      - ./data:/home/pgadmin
+
+volumes:
+  postgis_data:
