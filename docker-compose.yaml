@@ -22,8 +22,8 @@ services:
       - 80:80
       - 443:443
     environment:
-      PGADMIN_DEFAULT_EMAIL: cic901@imt.br
-      PGADMIN_DEFAULT_PASSWORD: cic901
+      PGADMIN_DEFAULT_EMAIL: t1-cic901@imt.br
+      PGADMIN_DEFAULT_PASSWORD: t1-cic901
     volumes:
       - ./data:/home/pgadmin
 
