@@ -66,7 +66,8 @@ Isso irá importar os dados para o banco `postgres`.
 
 
 Caso o comando não funcione realize o Backup a partir do PgAdmin. Explicação de acesso na seção  6.
-    - [Backup PgAdmin](https://www.youtube.com/watch?v=4HJwrXclC3A)
+
+- [Backup PgAdmin](https://www.youtube.com/watch?v=4HJwrXclC3A)
 
 ---
 
