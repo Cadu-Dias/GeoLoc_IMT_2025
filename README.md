@@ -30,10 +30,18 @@ Certifique-se de ter instalado:
 
 ### 2. 📥 Construir e iniciar os containers
 
-Abra o terminal na raiz do projeto e execute:
+Antes de tudo é necessário criar a imagem do Container Docker contendo a imagem do Jupyter com as dependências instaladas, a partir da Dockerfile. Isto pode ser feito a partir da execução do comando:
 
 ```bash
-docker-compose build
+docker build -t t1-cic901 .
+```
+
+OBS: Caso queira alterar o nome da imagem `t1-cic901`, lembre de alterar `no docker-compose.yaml`
+
+
+Execução do arquivo `docker-compose.yaml` - Abra o terminal na raiz do projeto e execute:
+
+```bash
 docker-compose up
 ```
 
@@ -47,31 +55,60 @@ Isso irá iniciar três serviços:
 
 ### 3. 💾 Restaurar o backup do banco
 
-Com os containers rodando, execute o comando abaixo para restaurar o backup SQL para o banco:
+Com os containers rodando, execute os comandos abaixo para restaurar o backup SQL para o banco:
 
 ```bash
-docker exec -i $(docker ps -qf "ancestor=postgis/postgis") psql -U postgres < backup/database_backup.sql
+docker cp ./backup/database_backup.sql $(docker ps -qf "ancestor=postgis/postgis:17-3.5"):/
+docker exec -i $(docker ps -qf "ancestor=postgis/postgis:17-3.5") pg_restore -U postgres -d postgres /database_backup.sql
 ```
 
 Isso irá importar os dados para o banco `postgres`.
 
 
-Caso o comando não funcione realize o Backup a partir do PgAdmin
+Caso o comando não funcione realize o Backup a partir do PgAdmin. Explicação de acesso na seção  6.
+    - [Backup PgAdmin](https://www.youtube.com/watch?v=4HJwrXclC3A)
+
 ---
 
 ### 4. 📊 Acessar o Jupyter Notebook
 
-Acesse no navegador:
+Ao executar o comando de `docker-compose up`, dentro do terminal, procure nos logs do conteiner dos Notebooks
+Jupyter algum link, semelhante ao de baixo:
 
 ```
-http://localhost:8888
+http://127.0.0.1:8888/lab?token=<token> 
+
+OU
+
+http://localhost:8888/lab?token=<token> 
+
 ```
 
 Use o token fornecido no terminal para acessar. Dentro do Jupyter, acesse a pasta `work/notebooks` e abra o notebook `analise_acessibilidade_sp_simples.ipynb`.
 
 ---
 
-### 5. 🛠️ Acessar o banco via PgAdmin (opcional)
+---
+
+### 5. 🌐 Obter o IP do container PostGIS
+
+Se quiser acessar o banco diretamente obtenha o endereço IPv4 do container do PostGIS com:
+
+```bash
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -qf "ancestor=postgis/postgis:17-3.5")
+```
+
+Esse IP pode ser usado como **host** ao conectar no banco. Os demais dados de acesso são:
+
+- **Porta:** 5432  
+- **Usuário:** postgres  
+- **Senha:** passwd  
+- **Banco:** postgres
+
+---
+
+
+### 6. 🛠️ Acessar o banco via PgAdmin (opcional)
 
 Acesse:
 
@@ -86,7 +123,7 @@ Login:
 
 Adicione uma nova conexão ao banco com os dados:
 
-- **Host:** db  
+- **Host:** IP do container  
 - **Porta:** 5432  
 - **Usuário:** postgres  
 - **Senha:** passwd  
