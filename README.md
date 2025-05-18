@@ -89,8 +89,6 @@ Use o token fornecido no terminal para acessar. Dentro do Jupyter, acesse a past
 
 ---
 
----
-
 ### 5. ⚙️ Configurações do container PostGIS
 
 O Banco PostgreSQL acrescido do PostGIS possui as seguintes configurações:
