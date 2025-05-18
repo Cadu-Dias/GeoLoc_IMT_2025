@@ -106,15 +106,15 @@ services:
     db:
         image: postgis/postgis:17-3.5
         ports:
-            - 5432:5432
+            - 5432:5432 # Define a porta do contêiner
         environment:
-            POSTGRES_USERNAME: postgres
-            POSTGRES_PASSWORD: passwd
+            POSTGRES_USERNAME: postgres # Configura o nome do usuário do banco
+            POSTGRES_PASSWORD: passwd # Configura a senha do usuário do banco
         volumes:
             - postgis_data:/var/lib/postgresql/data
         networks:
             vpc:
-                ipv4_address: 10.5.0.6
+                ipv4_address: 10.5.0.6 # Define o endereço IPv4 / Host do Banco
 ```
 
 ---
@@ -135,7 +135,7 @@ Login:
 
 Adicione uma nova conexão ao banco com os dados:
 
-- **Host:** IP do container  
+- **Host:** 10.5.0.6
 - **Porta:** 5432  
 - **Usuário:** postgres  
 - **Senha:** passwd  
