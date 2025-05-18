@@ -91,20 +91,33 @@ Use o token fornecido no terminal para acessar. Dentro do Jupyter, acesse a past
 
 ---
 
-### 5. 🌐 Obter o IP do container PostGIS
+### 5. ⚙️ Configurações do container PostGIS
 
-Se quiser acessar o banco diretamente obtenha o endereço IPv4 do container do PostGIS com:
-
-```bash
-docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -qf "ancestor=postgis/postgis:17-3.5")
-```
-
-Esse IP pode ser usado como **host** ao conectar no banco. Os demais dados de acesso são:
+O Banco PostgreSQL acrescido do PostGIS possui as seguintes configurações:
 
 - **Porta:** 5432  
 - **Usuário:** postgres  
 - **Senha:** passwd  
 - **Banco:** postgres
+- **Endereço IPv4:** 10.5.0.6
+
+Qualquer necessidade de alteração de valor deve ser realizada no arquivo `docker-compose.yaml` na seguinte seção:
+
+```yaml
+services:
+    db:
+        image: postgis/postgis:17-3.5
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_USERNAME: postgres
+            POSTGRES_PASSWORD: passwd
+        volumes:
+            - postgis_data:/var/lib/postgresql/data
+        networks:
+            vpc:
+                ipv4_address: 10.5.0.6
+```
 
 ---
 
