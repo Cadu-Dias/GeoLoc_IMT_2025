@@ -1,6 +1,6 @@
 services:
   jupyter:
-    image: 't1-cic901'
+    image: 'analise_hp_sp'
     ports:
       - 8888:8888
     volumes:
@@ -28,8 +28,8 @@ services:
       - 80:80
       - 443:443
     environment:
-      PGADMIN_DEFAULT_EMAIL: t1-cic901@imt.br
-      PGADMIN_DEFAULT_PASSWORD: t1-cic901
+      PGADMIN_DEFAULT_EMAIL: analise_hp_sp@gmail.br
+      PGADMIN_DEFAULT_PASSWORD: analise_hp_sp
     volumes:
       - ./data:/home/pgadmin
     networks:
