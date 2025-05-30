@@ -1,20 +1,26 @@
 services:
   jupyter:
-    image: 't1-cic901'
+    image: 'analise_hp_sp'
     ports:
       - 8888:8888
     volumes:
       - ./notebooks:/home/jovyan/work
       - ./datasets:/home/jovyan/work/datasets
+    networks:
+      vpc:
 
   db:
     image: postgis/postgis:17-3.5
     ports:
       - 5432:5432
     environment:
+      POSTGRES_USERNAME: postgres
       POSTGRES_PASSWORD: passwd
     volumes:
       - postgis_data:/var/lib/postgresql/data
+    networks:
+      vpc:
+        ipv4_address: 10.5.0.6
 
   admin:
     image: dpage/pgadmin4
@@ -22,10 +28,20 @@ services:
       - 80:80
       - 443:443
     environment:
-      PGADMIN_DEFAULT_EMAIL: t1-cic901@imt.br
-      PGADMIN_DEFAULT_PASSWORD: t1-cic901
+      PGADMIN_DEFAULT_EMAIL: analise_hp_sp@gmail.br
+      PGADMIN_DEFAULT_PASSWORD: analise_hp_sp
     volumes:
       - ./data:/home/pgadmin
+    networks:
+      vpc:
 
 volumes:
   postgis_data:
+
+networks:
+  vpc:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.5.0.0/16
+         gateway: 10.5.0.1

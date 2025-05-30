@@ -8,4 +8,5 @@ RUN pip install \
   keplergl \
   sqlalchemy \
   psycopg2-binary \
-  geoalchemy2
+  geoalchemy2 \
+  geopy

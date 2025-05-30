@@ -8,8 +8,12 @@ Este projeto tem como objetivo mapear e analisar a distribuição de unidades de
 .
 ├── backup/
 │   └── database_backup.sql            # Backup do banco de dados com os dados geoespaciais
+│
 ├── notebooks/
 │   └── analise_acessibilidade_sp_simples.ipynb # Notebook com a análise e visualizações
+│   └── codigos_distritos_msp.csv # Asset que ajuda na análise
+│   └── distritos-sp.csv # Asset que ajuda na análise
+│
 ├── Dockerfile              # Imagem personalizada com bibliotecas geoespaciais
 ├── docker-compose.yaml     # Orquestração do Jupyter, PostgreSQL/PostGIS e PgAdmin
 └── README.md               # Este arquivo
@@ -33,10 +37,10 @@ Certifique-se de ter instalado:
 Antes de tudo é necessário criar a imagem do Container Docker contendo a imagem do Jupyter com as dependências instaladas, a partir da Dockerfile. Isto pode ser feito a partir da execução do comando:
 
 ```bash
-docker build -t t1-cic901 .
+docker build -t analise_hp_sp .
 ```
 
-OBS: Caso queira alterar o nome da imagem `t1-cic901`, lembre de alterar `no docker-compose.yaml`
+OBS: Caso queira alterar o nome da imagem `analise_hp_sp`, lembre de alterar no `docker-compose.yaml`
 
 
 Execução do arquivo `docker-compose.yaml` - Abra o terminal na raiz do projeto e execute:
@@ -89,22 +93,33 @@ Use o token fornecido no terminal para acessar. Dentro do Jupyter, acesse a past
 
 ---
 
----
+### 5. ⚙️ Configurações do container PostGIS
 
-### 5. 🌐 Obter o IP do container PostGIS
-
-Se quiser acessar o banco diretamente obtenha o endereço IPv4 do container do PostGIS com:
-
-```bash
-docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -qf "ancestor=postgis/postgis:17-3.5")
-```
-
-Esse IP pode ser usado como **host** ao conectar no banco. Os demais dados de acesso são:
+O Banco PostgreSQL acrescido do PostGIS possui as seguintes configurações:
 
 - **Porta:** 5432  
 - **Usuário:** postgres  
 - **Senha:** passwd  
 - **Banco:** postgres
+- **Endereço IPv4:** 10.5.0.6
+
+Qualquer necessidade de alteração de valor deve ser realizada no arquivo `docker-compose.yaml` na seguinte seção:
+
+```yaml
+services:
+    db:
+        image: postgis/postgis:17-3.5
+        ports:
+            - 5432:5432 # Define a porta do contêiner
+        environment:
+            POSTGRES_USERNAME: postgres # Configura o nome do usuário do banco
+            POSTGRES_PASSWORD: passwd # Configura a senha do usuário do banco
+        volumes:
+            - postgis_data:/var/lib/postgresql/data
+        networks:
+            vpc:
+                ipv4_address: 10.5.0.6 # Define o endereço IPv4 / Host do Banco
+```
 
 ---
 
@@ -119,12 +134,12 @@ http://localhost/browser
 
 Login:
 
-- **Email:** t1-cic901@imt.br  
-- **Senha:** t1-cic901
+- **Email:** analise_hp_sp@gmail.br  
+- **Senha:** analise_hp_sp
 
 Adicione uma nova conexão ao banco com os dados:
 
-- **Host:** IP do container  
+- **Host:** 10.5.0.6
 - **Porta:** 5432  
 - **Usuário:** postgres  
 - **Senha:** passwd  
@@ -152,3 +167,4 @@ Adicione uma nova conexão ao banco com os dados:
 - Folium
 - KeplerGl
 - PostGIS (PostgreSQL com suporte geoespacial)
+- geopy
